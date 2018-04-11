@@ -29,11 +29,10 @@
 # Code:
 
 import os
-
+import scipy.misc
 import numpy as np
-
-from utils.external import unpickle
-
+from math import floor
+from PIL import Image
 
 def load_data(data_dir, data_type):
     """Function to load data from CIFAR10.
@@ -60,7 +59,7 @@ def load_data(data_dir, data_type):
 
     if data_type == "train":
         high_res_directory = 'input_train/'
-    else if data_type == "test":
+    elif data_type == "test":
         high_res_directory = 'input_test/'
     else:
         raise ValueError("Wrong data type {}".format(data_type))
