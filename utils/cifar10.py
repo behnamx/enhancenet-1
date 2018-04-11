@@ -77,14 +77,14 @@ def load_data(data_dir, data_type):
             w, h    = img.size
 
             # Save high res image into Training Labels
-            label   += np.concatenate(np.array(img)/255)
+            label   += np.array(img)/255
 
             # Resize high res image to 1/4 scale
             img.crop((0, 0, floor(w/scale), floor(h/scale)))
             img = img.resize((w//scale, h//scale), Image.ANTIALIAS)
 
             # Add low res image to Training Data
-            data += np.concatenate(np.array(img)/255)
+            data += np.array(img)/255
 
         # Concat them
         data = np.concatenate(data)
