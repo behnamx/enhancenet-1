@@ -67,6 +67,8 @@ def load_data(data_dir, data_type):
     data = []
     label = []
 
+    print "hello"
+
     # Loads images from input folder into downsampled low res, stores
     # orginal images into labels and downsampled into data
     # Code influence from http://webdav.tue.mpg.de/pixel/enhancenet/
