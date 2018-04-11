@@ -61,7 +61,10 @@ def load_data(data_dir, data_type):
     if data_type == "train":
         data = []
         label = []
-        #Image resize, return lowres data high res label
+
+        # Loads images from input folder into downsampled low res, stores
+        # orginal images into labels and downsampled into data
+        # Code influence from http://webdav.tue.mpg.de/pixel/enhancenet/
 
         high_res_directory = 'input/'
 
