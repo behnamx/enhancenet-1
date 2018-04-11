@@ -61,15 +61,28 @@ def load_data(data_dir, data_type):
     if data_type == "train":
         data = []
         label = []
-        for _i in range(5):
-            file_name = os.path.join(data_dir, "data_batch_{}".format(_i + 1))
-            cur_dict = unpickle(file_name)
-            data += [
-                np.array(cur_dict[b"data"])
-            ]
-            label += [
-                np.array(cur_dict[b"labels"])
-            ]
+        #Image resize, return lowres data high res label
+
+        high_res_directory = 'input/'
+
+        # Downsample High res images in output directory
+        for filename in os.listdir(high_res_directory):
+
+            # Load high res image from input directory
+            img     = Image.open(os.path.join(high_res_directory, filename)).convert('RGB')         
+            scale   = 4
+            w, h    = img.size
+
+            # Save high res image into Training Labels
+            label   += np.concatenate(np.array(img)/255)
+
+            # Resize high res image to 1/4 scale
+            img.crop((0, 0, floor(w/scale), floor(h/scale)))
+            img = img.resize((w//scale, h//scale), Image.ANTIALIAS)
+
+            # Add low res image to Training Data
+            data += np.concatenate(np.array(img)/255)
+
         # Concat them
         data = np.concatenate(data)
         label = np.concatenate(label)
