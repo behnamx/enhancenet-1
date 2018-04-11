@@ -59,46 +59,40 @@ def load_data(data_dir, data_type):
     """
 
     if data_type == "train":
-        data = []
-        label = []
-
-        # Loads images from input folder into downsampled low res, stores
-        # orginal images into labels and downsampled into data
-        # Code influence from http://webdav.tue.mpg.de/pixel/enhancenet/
-
-        high_res_directory = 'input/'
-
-        # Downsample High res images in output directory
-        for filename in os.listdir(high_res_directory):
-
-            # Load high res image from input directory
-            img     = Image.open(os.path.join(high_res_directory, filename)).convert('RGB')         
-            scale   = 4
-            w, h    = img.size
-
-            # Save high res image into Training Labels
-            label   += np.array(img)/255
-
-            # Resize high res image to 1/4 scale
-            img.crop((0, 0, floor(w/scale), floor(h/scale)))
-            img = img.resize((w//scale, h//scale), Image.ANTIALIAS)
-
-            # Add low res image to Training Data
-            data += np.array(img)/255
-
-        # Concat them
-        data = np.concatenate(data)
-        label = np.concatenate(label)
-
-    elif data_type == "test":
-        data = []
-        label = []
-        cur_dict = unpickle(os.path.join(data_dir, "test_batch"))
-        data = np.array(cur_dict[b"data"])
-        label = np.array(cur_dict[b"labels"])
-
+        high_res_directory = 'input_train/'
+    else if data_type == "test":
+        high_res_directory = 'input_test/'
     else:
         raise ValueError("Wrong data type {}".format(data_type))
+        
+    data = []
+    label = []
+
+    # Loads images from input folder into downsampled low res, stores
+    # orginal images into labels and downsampled into data
+    # Code influence from http://webdav.tue.mpg.de/pixel/enhancenet/
+
+    # Downsample High res images in output directory
+    for filename in os.listdir(high_res_directory):
+
+        # Load high res image from input directory
+        img     = Image.open(os.path.join(high_res_directory, filename)).convert('RGB')         
+        scale   = 4
+        w, h    = img.size
+
+        # Save high res image into Training Labels
+        label   += np.array(img)/255
+
+        # Resize high res image to 1/4 scale
+        img.crop((0, 0, floor(w/scale), floor(h/scale)))
+        img = img.resize((w//scale, h//scale), Image.ANTIALIAS)
+
+        # Add low res image to Training Data
+        data += np.array(img)/255
+
+    # Concat them
+    data = np.concatenate(data)
+    label = np.concatenate(label)
 
     # Turn data into (NxHxWxC) format, so that we can easily process it, where
     # N=number of images, H=height, W=widht, C=channels. Note that this
