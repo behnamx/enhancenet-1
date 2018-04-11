@@ -6,9 +6,11 @@ import tensorflow as tf
 from tqdm import trange
 
 import vgg16
+import nnlib
 from config import get_config, print_usage
 from nnlib import *
 from utils.cifar10 import load_data
+
 
 PER_CHANNEL_MEANS = np.array([0.47614917, 0.45001204, 0.40904046])
 
@@ -41,7 +43,13 @@ class MyNetwork(object):
         """Build placeholders."""
 
         # Get shape for placeholder
+
         x_in_shp = [None] + list(self.x_shp[1:])
+
+	print ( x_shp )
+	print ( self.x_shp[1:])
+	print ( list(self.x_shp[1:] )
+
         imgsize = TODO
 
         # Create Placeholders for inputs
@@ -68,12 +76,17 @@ class MyNetwork(object):
                      [upsample], [conv], [relu],
                      [conv], [relu],
                      [conv, 3]])
-        ys_res = tf.image.resize_images(xs, [4*imgsize[0], 4*imgsize[1]],
-                                        method=tf.image.ResizeMethod.BICUBIC)
+        ys_res = tf.image.resize_images(xs, [4*imgsize[0], 4*imgsize[1]], method=tf.image.ResizeMethod.BICUBIC)
 
 
         # TODO: Also use tf.summary.image to visualize some images
-        
+        # https://www.tensorflow.org/api_docs/python/tf/summary/image
+	
+	tf.summary.image ( 'high_res', x_in)
+	
+
+	
+	sys.exit();
 
         self.y_est += ys_res + PER_CHANNEL_MEANS
 
@@ -379,12 +392,12 @@ def main(config):
     # ----------------------------------------
     # Load cifar10 train data
     print("Reading training data...")
-    x_trva, y_trva = TODO
+    x_trva, y_trva = load_data(config.data_dir, "train")
 
     # ----------------------------------------
     # Load cifar10 test data
     print("Reading test data...")
-    x_te, y_te = TODO
+    x_te, y_te = load_data(config.data_dir, "test")
 
     # Randomly shuffle data and labels. IMPORANT: make sure the data and label
     # is shuffled with the same random indices so that they don't get mixed up!
